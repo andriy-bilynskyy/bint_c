@@ -1,0 +1,6 @@
+**/*.o
+**/*.d
+.cproject
+.project
+.settings/
+bint_c
