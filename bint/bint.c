@@ -3,9 +3,10 @@
 void bint_set(uintb_t * words, uintb_t words_len, uintb_t value) {
 
     if(words && words_len) {
+        uintb_t * const words_fin = words + words_len;
         *(words++) = value;
-        for(uintb_t i = 1; i < words_len; ++i) {
-            *(words++) = 0;
+        for(; words < words_fin; ++words) {
+            *words = 0;
         }
     }
 }
@@ -13,8 +14,9 @@ void bint_set(uintb_t * words, uintb_t words_len, uintb_t value) {
 void bint_set_max(uintb_t * words, uintb_t words_len) {
 
     if(words) {
-        for(uintb_t i = 0; i < words_len; ++i) {
-            *(words++) = (uintb_t)-1;
+        uintb_t * const words_fin = words + words_len;
+        for(; words < words_fin; ++words) {
+            *words = (uintb_t)-1;
         }
     }
 }
@@ -31,7 +33,15 @@ uintb_t bint_length(const uintb_t * words, uintb_t words_len) {
 
 bool bint_iszero(const uintb_t * words, uintb_t words_len) {
 
-    return !bint_length(words, words_len);
+    bool result = true;
+
+    if(words) {
+        const uintb_t * const words_fin = words + words_len;
+        for(; words < words_fin && !words; ++words);
+        result = !*words;
+    }
+
+    return result;
 }
 
 bool bint_increment(uintb_t * words, uintb_t words_len) {
