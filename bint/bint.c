@@ -74,13 +74,18 @@ bool bint_shift_left(uintb_t * words, uintb_t words_len) {
 
     bool msb = 0;
     if(words) {
-        uintb_t * words_last = words + words_len - 1;
+        uintb_t * words_fin = words + words_len;
+        uintb_t * words_last = words_fin - 1;
         for(; words_last >= words && !*words_last; --words_last);
-        for(; words < words_last;) {
+        for(; words <= words_last;) {
             bool tmp = *words & ~((uintb_t)-1 >> 1);
             *words <<= 1;
             *(words++) |= msb;
             msb = tmp;
+        }
+        if(words < words_fin) {
+            *words = msb;
+            msb = 0;
         }
     }
     return msb;
